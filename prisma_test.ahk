@@ -1,6 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
+DllCall("AttachConsole", "int", -1)
+
 waitTime := 4000
 url := A_Args[1]
 
