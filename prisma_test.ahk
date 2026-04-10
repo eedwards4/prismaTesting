@@ -35,13 +35,18 @@ if !ClipWait(2) {
 } else {
     pageText := A_Clipboard
 
-    ; Optional: truncate for performance
-    pageText := SubStr(pageText, 1, 2000)
+    if pageText == "" {
+        result := "FALSE" ; Assume ALLOWED because block page is ctrl-a friendly
+    }
+    else {
+        ; Truncate for performance
+        pageText := SubStr(pageText, 1, 2000)
 
-    if InStr(pageText, "Restricted website") {
-        result := "TRUE"    ; BLOCKED
-    } else {
-        result := "FALSE"   ; ALLOWED
+        if InStr(pageText, "Restricted website") {
+            result := "TRUE"    ; BLOCKED
+        } else {
+            result := "FALSE"   ; ALLOWED
+        }
     }
 }
 
