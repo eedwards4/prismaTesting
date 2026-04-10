@@ -1,3 +1,4 @@
+from pathlib import Path
 import subprocess
 import time
 import csv
@@ -38,16 +39,12 @@ def run_test(filepath):
 
             if url != "VOID":
                 # Run AHK script on URL
-                result = subprocess.run(
-                    [AHK_PATH, SCRIPT, url], 
-                    capture_output=True, text=True, 
-                    encoding="utf-8", 
-                    errors="ignore"
-                )
+                subprocess.run([AHK_PATH, SCRIPT, url])
     
-                content = result.stdout.strip()
+                file = open("{}/AppData/Local/Temp/ahk_output.txt".format(Path.home()))
+                content = file.readline().strip()
     
-                if "FALSE" in content:
+                if "FALSE" or "ERROR" in content:
                     num_unblocked += 1
                     unblocked_list.append(url)
                 
