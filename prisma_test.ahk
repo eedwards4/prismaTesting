@@ -50,6 +50,9 @@ if !ClipWait(2) {
     }
 }
 
+; Close tab after we're done with it
+Send("^w")
+
 ; Output
 FileDelete(A_Temp "./ahk_output.txt")
 FileAppend(result, A_Temp "./ahk_output.txt")
