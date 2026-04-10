@@ -3,7 +3,7 @@ import subprocess
 import time
 import csv
 
-AHK_PATH = r"C:/Program Files/AutoHotkey/AutoHotkey.exe"
+AHK_PATH = r"C:/Program Files/AutoHotkey/v2/AutoHotkey64.exe"
 SCRIPT = "./prisma_test.ahk"
 
 URLS = []
