@@ -45,7 +45,7 @@ def run_test(filepath):
                 content = file.readline().strip()
                 file.close()
     
-                if "FALSE" or "ERROR" in content:
+                if not "TRUE" in content:
                     num_unblocked += 1
                     unblocked_list.append(url)
                 
