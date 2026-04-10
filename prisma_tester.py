@@ -43,6 +43,7 @@ def run_test(filepath):
     
                 file = open("{}/AppData/Local/Temp/ahk_output.txt".format(Path.home()))
                 content = file.readline().strip()
+                file.close()
     
                 if "FALSE" or "ERROR" in content:
                     num_unblocked += 1
