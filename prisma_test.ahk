@@ -48,6 +48,6 @@ if !ClipWait(2) {
 }
 
 ; Output to stdout
-FileAppend(result, "*")
+FileAppend(Type(result), "*")
 
 ExitApp()
