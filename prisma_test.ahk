@@ -32,6 +32,8 @@ Send("^a")
 Sleep(100)
 Send("^c")
 
+result := "ERROR"
+
 if !ClipWait(2) {
     result := "ERROR"
 } else {
@@ -48,6 +50,6 @@ if !ClipWait(2) {
 }
 
 ; Output to stdout
-FileAppend(Type(result), "*")
+FileAppend(result "`n", "*")
 
 ExitApp()
