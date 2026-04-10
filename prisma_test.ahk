@@ -30,8 +30,6 @@ Send("^a")
 Sleep(100)
 Send("^c")
 
-result := "ERROR"
-
 if !ClipWait(2) {
     result := "ERROR"
 } else {
@@ -48,6 +46,7 @@ if !ClipWait(2) {
 }
 
 ; Output
-FileAppend(result, A_Temp "\ahk_output.txt")
+FileAppend(result, A_Temp "./ahk_output.txt")
+FileAppend(result, "*")
 
 ExitApp()
