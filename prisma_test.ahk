@@ -47,13 +47,7 @@ if !ClipWait(2) {
     }
 }
 
-; Output to stdout
-hStdout := DllCall("GetStdHandle", "int", -11, "ptr") ; STD_OUTPUT_HANDLE = -11
-DllCall("WriteFile"
-    , "ptr", hStdout
-    , "str", result "`n"
-    , "uint", StrLen(result) + 1
-    , "uint*", 0
-    , "ptr", 0)
+; Output
+FileAppend(result, A_Temp "\ahk_output.txt")
 
 ExitApp()
