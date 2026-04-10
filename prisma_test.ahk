@@ -46,7 +46,7 @@ if !ClipWait(2) {
 }
 
 ; Output
+FileDelete(A_Temp "./ahk_output.txt")
 FileAppend(result, A_Temp "./ahk_output.txt")
-FileAppend(result, "*")
 
 ExitApp()
