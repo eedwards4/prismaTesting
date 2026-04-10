@@ -6,6 +6,8 @@ DllCall("AttachConsole", "int", -1)
 waitTime := 4000
 url := A_Args[1]
 
+FileAppend("test output`n", "*")
+
 ; Activate browser
 WinActivate("New Tab - Prisma Browser")
 WinWaitActive("New Tab - Prisma Browser", , 3)
