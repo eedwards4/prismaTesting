@@ -1,12 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-DllCall("AttachConsole", "int", -1)
-
 waitTime := 4000
 url := A_Args[1]
-
-FileAppend("test output`n", "*")
 
 ; Activate browser
 WinActivate("New Tab - Prisma Browser")
@@ -52,6 +48,12 @@ if !ClipWait(2) {
 }
 
 ; Output to stdout
-FileAppend(result "`n", "*")
+hStdout := DllCall("GetStdHandle", "int", -11, "ptr") ; STD_OUTPUT_HANDLE = -11
+DllCall("WriteFile"
+    , "ptr", hStdout
+    , "str", result "`n"
+    , "uint", StrLen(result) + 1
+    , "uint*", 0
+    , "ptr", 0)
 
 ExitApp()
