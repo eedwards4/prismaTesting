@@ -69,7 +69,7 @@ def main():
     all_unblocked = []
 
     for file in list_files:
-        num_unblocked, num_total, unblocked_list = run_test(file)
+        num_unblocked, num_total, unblocked_list = run_test("{}{}".format(Path.cwd(), file))
 
         total_unblocked += num_unblocked
         total_total += num_total
