@@ -5,8 +5,8 @@ waitTime := 4000
 url := A_Args[1]
 
 ; Activate browser
-WinActivate("Prisma")
-WinWaitActive("Prisma", , 3)
+WinActivate("New Tab - Prisma Browser")
+WinWaitActive("New Tab - Prisma Browser", , 3)
 
 ; New tab
 Send("^t")
