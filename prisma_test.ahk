@@ -5,6 +5,7 @@ waitTime := 4000
 url := A_Args[1]
 
 ; Activate browser
+Sleep(waitTime)
 WinActivate("New Tab - Prisma Browser")
 WinWaitActive("New Tab - Prisma Browser", , 3)
 
@@ -22,12 +23,12 @@ Sleep(50)
 Send("{Enter}")
 
 ; Wait for load
-Sleep(waitTime)
+Sleep(waitTime * 1.5)
 
 ; Copy entire page
 A_Clipboard := ""
 Send("^a")
-Sleep(100)
+Sleep(500)
 Send("^c")
 
 if !ClipWait(2) {
@@ -52,6 +53,8 @@ if !ClipWait(2) {
 
 ; Close tab after we're done with it
 Send("^w")
+
+Sleep(1000)
 
 ; Output
 FileDelete(A_Temp "./ahk_output.txt")
