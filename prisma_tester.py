@@ -27,7 +27,7 @@ def run_test(filepath):
     num_total = 0
     unblocked_list = []
 
-    output = open("test-results-{}".format(filepath), "w")
+    output = open("test-results-{}".format(filepath.split('\\')[-1]), "w")
 
     # Print statements for logging
     print("------------------------------------------------------")
@@ -59,7 +59,7 @@ def run_test(filepath):
     print("Test complete")
     print("Total URLs tested: {}".format(num_total))
     print("Undetected URLS: {}".format(num_unblocked))
-    print("See test-results-{} for details on undetected sites".format(filepath))
+    print("See test-results-{} for details on undetected sites".format(filepath.split('\\')[-1]))
 
     # Log to file
     print("Test complete", file=output)
