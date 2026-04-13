@@ -37,7 +37,7 @@ if !ClipWait(2) {
     pageText := A_Clipboard
 
     if pageText == "" {
-        result := "FALSE" ; Assume ALLOWED because block page is ctrl-a friendly
+        result := "TRUE" ; Assume BLOCKED because it didn't load
     }
     else {
         ; Truncate for performance
@@ -52,7 +52,7 @@ if !ClipWait(2) {
         else if InStr(pageText, "Performing security verification") {
             result := "FALSE"      ; SECURITY VERIFICATION
         }
-        else if InStr(pageText, "This site can't be reached") {
+        else if InStr(pageText, "DNS_PROBE_FINISHED_NXDOMAIN") {
             result := "TRUE"    ; UNAVAILABLE
         }
         else if InStr(pageText, "403 Forbidden") {
