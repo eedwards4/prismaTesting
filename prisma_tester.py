@@ -27,9 +27,13 @@ def run_test(filepath):
     num_total = 0
     unblocked_list = []
 
+    output = open("test-results-{}".format(filepath), "w")
+
     # Print statements for logging
     print("------------------------------------------------------")
     print("Running test for file: {}".format(filepath))
+    print("------------------------------------------------------", file=output)
+    print("Running test for file: {}".format(filepath), file=output)
 
     # Logic
     with open(filepath, 'r', encoding='utf8') as file:
@@ -55,9 +59,18 @@ def run_test(filepath):
     print("Test complete")
     print("Total URLs tested: {}".format(num_total))
     print("Undetected URLS: {}".format(num_unblocked))
-    print("The following URLs escaped detection:")
+    print("See test-results-{} for details on undetected sites".format(filepath))
+
+    # Log to file
+    print("Test complete", file=output)
+    print("Total URLs tested: {}".format(num_total), file=output)
+    print("Undetected URLS: {}".format(num_unblocked), file=output)
+    print("The following URLs escaped detection:", file=output)
     for site in unblocked_list:
-        print(site)
+        print(site, file=output)
+    
+    output.close()
+    file.close()
 
     return num_unblocked, num_total, unblocked_list
 
