@@ -44,9 +44,25 @@ if !ClipWait(2) {
         pageText := SubStr(pageText, 1, 2000)
 
         if InStr(pageText, "Restricted website") {
-            result := "TRUE"    ; BLOCKED
-        } else {
-            result := "FALSE"   ; ALLOWED
+            result := "TRUE"     ; RESTRICTED
+        } 
+        else if InStr(pageText, "Malicious website") {
+            result := "TRUE"      ; MALICIOUS
+        }
+        else if InStr(pageText, "Performing security verification") {
+            result := "FALSE"      ; SECURITY VERIFICATION
+        }
+        else if InStr(pageText, "This site can't be reached") {
+            result := "TRUE"    ; UNAVAILABLE
+        }
+        else if InStr(pageText, "403 Forbidden") {
+            result := "TRUE"      ; FORBIDDEN
+        }
+        else if (InStr(StrLower(pageText), "for sale") AND InStr(StrLower(pageText), "domain")) {
+            result := "TRUE"        ; FOR SALE
+        }
+        else {
+            result := "FALSE"          ; ALLOWED
         }
     }
 }
