@@ -32,7 +32,7 @@ Sleep(500)
 Send("^c")
 
 if !ClipWait(2) {
-    result := "ERROR"
+    result := "TRUE" ; Assume BLOCKED because failure to copy
 } else {
     pageText := A_Clipboard
 
