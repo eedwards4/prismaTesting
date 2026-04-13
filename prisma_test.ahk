@@ -52,8 +52,8 @@ if !ClipWait(2) {
         else if InStr(pageText, "Performing security verification") {
             result := "FALSE"      ; SECURITY VERIFICATION
         }
-        else if InStr(pageText, "DNS_PROBE_FINISHED_NXDOMAIN") {
-            result := "TRUE"    ; UNAVAILABLE
+        else if InStr(pageText, "Pasting this data from Prisma Browser is prohibited") {
+            result := "TRUE"    ; UNAVAILABLE (This is really brittle...)
         }
         else if InStr(pageText, "403 Forbidden") {
             result := "TRUE"      ; FORBIDDEN

@@ -59,12 +59,18 @@ def run_test(filepath):
     print("Test complete")
     print("Total URLs tested: {}".format(num_total))
     print("Undetected URLS: {}".format(num_unblocked))
+    if num_total != 0:
+        percent = (num_unblocked / num_total) * 100
+    else:
+        percent = 0
+    print("{} percent of URLs were undetected.".format(percent))
     print("See test-results-{} for details on undetected sites".format(filepath.split('\\')[-1]))
 
     # Log to file
     print("Test complete", file=output)
     print("Total URLs tested: {}".format(num_total), file=output)
     print("Undetected URLS: {}".format(num_unblocked), file=output)
+    print("{} percent of URLs were undetected.".format(percent), file=output)
     print("The following URLs escaped detection:", file=output)
     for site in unblocked_list:
         print(site, file=output)
@@ -76,14 +82,14 @@ def run_test(filepath):
 
 
 def main():
-    list_files = ["test.txt"]
+    list_files = ["gambling.txt"]
 
     total_unblocked = 0
     total_total = 0
     all_unblocked = []
 
     for file in list_files:
-        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(Path.cwd(), file))
+        num_unblocked, num_total, unblocked_list = run_test("{}\\lists\\{}".format(Path.cwd(), file))
 
         total_unblocked += num_unblocked
         total_total += num_total
@@ -98,7 +104,7 @@ def main():
         percent = (total_unblocked / total_total) * 100
     else:
         percent = 0
-    print("{} percent of URLs were unblocked.".format(percent))
+    print("{} percent of URLs were detected.".format(percent))
     print("The following URLs were able to escape detection:")
     for site_list in all_unblocked:
         for site in site_list:
