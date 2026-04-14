@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess
+import datetime
 import time
 import csv
 
@@ -41,6 +42,8 @@ def run_test(filepath):
     num_total = 0
     unblocked_list = []
 
+    start = time.perf_counter()
+
     output = open("test-results-{}".format(filepath.split('\\')[-1]), "w")
 
     # Print statements for logging
@@ -62,8 +65,10 @@ def run_test(filepath):
                 
                 num_total += 1
     
+    end = time.perf_counter()
+    
     # More logging
-    print("Test complete")
+    print("Test complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))))
     print("Total URLs tested: {}".format(num_total))
     print("Undetected URLS: {}".format(num_unblocked))
     if num_total != 0:
@@ -95,16 +100,21 @@ def main():
     total_total = 0
     all_unblocked = []
 
+    print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
+    start = time.perf_counter()
+
     for file in list_files:
         num_unblocked, num_total, unblocked_list = run_test("{}\\lists\\{}".format(Path.cwd(), file))
 
         total_unblocked += num_unblocked
         total_total += num_total
         all_unblocked.append(unblocked_list)
+    
+    end = time.perf_counter()
 
     # Prettyprint
     print("------------------------------------------------------")
-    print("All tests complete")
+    print("All tests complete, elapsed time {} seconds".format(datetime.timedelta(seconds=(end - start))))
     print("Total URLs checked: {}".format(total_total))
     print("Total Undetected URLS: {}".format(total_unblocked))
     if total_total != 0:
