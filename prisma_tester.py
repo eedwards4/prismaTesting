@@ -37,6 +37,10 @@ def asAHK(url):
     return False
 
 
+def asTEST(url):
+    return True
+
+
 def run_test(filepath):
     num_unblocked = 0
     num_total = 0
@@ -79,7 +83,7 @@ def run_test(filepath):
     print("See test-results-{} for details on undetected sites".format(filepath.split('\\')[-1]))
 
     # Log to file
-    print("Test complete", file=output)
+    print("Test complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))), file=output)
     print("Total URLs tested: {}".format(num_total), file=output)
     print("Undetected URLS: {}".format(num_unblocked), file=output)
     print("{} percent of URLs were undetected.".format(percent), file=output)
@@ -94,7 +98,7 @@ def run_test(filepath):
 
 
 def main():
-    list_files = ["gambling.txt"]
+    list_files = ["test.txt"]
 
     total_unblocked = 0
     total_total = 0
@@ -114,7 +118,7 @@ def main():
 
     # Prettyprint
     print("------------------------------------------------------")
-    print("All tests complete, elapsed time {} seconds".format(datetime.timedelta(seconds=(end - start))))
+    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))))
     print("Total URLs checked: {}".format(total_total))
     print("Total Undetected URLS: {}".format(total_unblocked))
     if total_total != 0:
@@ -125,6 +129,10 @@ def main():
 
     file = open("test-results-cumulative.txt", "w")
     print("Logging all undetected urls to test-results-cumulative.txt")
+    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))), file=file)
+    print("Total URLs checked: {}".format(total_total), file=file)
+    print("Total Undetected URLS: {}".format(total_unblocked), file=file)
+    print("{} percent of URLs were undetected.".format(percent), file=file)
     print("The following URLs were able to escape detection:", file=file)
     for site_list in all_unblocked:
         for site in site_list:
