@@ -82,7 +82,7 @@ def run_test(filepath):
 
 
 def main():
-    list_files = ["gambling.txt"]
+    list_files = ["piracy.txt", "drugs.txt"]
 
     total_unblocked = 0
     total_total = 0
