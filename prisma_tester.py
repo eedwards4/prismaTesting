@@ -104,11 +104,14 @@ def main():
         percent = (total_unblocked / total_total) * 100
     else:
         percent = 0
-    print("{} percent of URLs were detected.".format(percent))
-    print("The following URLs were able to escape detection:")
+    print("{} percent of URLs were undetected.".format(percent))
+
+    file = open("test-results-cumulative.txt", "w")
+    print("Logging all undetected urls to test-results-cumulative.txt")
+    print("The following URLs were able to escape detection:", file=file)
     for site_list in all_unblocked:
         for site in site_list:
-            print(site)
+            print(site, file=file)
 
 
 main()
