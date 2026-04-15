@@ -57,17 +57,22 @@ def run_test(filepath):
     print("Running test for file: {}".format(filepath), file=output)
 
     # Logic
+    stoppoint = 20
+    iterator = 0
     with open(filepath, 'r', encoding='utf8') as file:
         for line in file:
-            # Strip URL from line
-            url = urlStripper(line)
+            if iterator <= stoppoint:
+                # Strip URL from line
+                url = urlStripper(line)
 
-            if url != "VOID":
-                if asAHK(url):
-                    num_unblocked += 1
-                    unblocked_list.append(url)
+                if url != "VOID":
+                    if asAHK(url):
+                        num_unblocked += 1
+                        unblocked_list.append(url)
                 
-                num_total += 1
+                    num_total += 1
+            else:
+                break
     
     end = time.perf_counter()
     
