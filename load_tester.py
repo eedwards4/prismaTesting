@@ -1,6 +1,7 @@
 # A program to open crab rave until your browser crashes :)
 from pathlib import Path
 import subprocess
+import datetime
 import psutil
 import time
 
@@ -30,16 +31,21 @@ def get_num_prisma_processes():
 
 
 def run_test():
-    print("Beginning load test...")
+    print("Beginning load test at {}".format(datetime.datetime.now()))
+    start = time.perf_counter()
     baseCount = get_num_prisma_processes() # The number of Prisma processes running before the test starts
     count = 0 # The number of Prisma processes that have been opened by the test
     print(f"{baseCount} Prisma processes were already running before the test started.")
-    # while is_process_running("PrismaAccessBrowser.exe"):
-    #     subprocess.run([AHK_PATH, AHK_SCRIPT])
-    #     count = get_num_prisma_processes() - baseCount
-    #     print(f"{count} Prisma processes opened so far...") # Redundancy in case prisma doesn't crash before the system runs out of memory and the test is killed manually
+    while is_process_running("PrismaAccessBrowser.exe"):
+        subprocess.run([AHK_PATH, AHK_SCRIPT])
+        count = get_num_prisma_processes() - baseCount
+        print(f"{count} Prisma processes opened so far...") # Redundancy in case prisma doesn't crash before the system runs out of memory and the test is killed manually
     
+    end = time.perf_counter()
+
     print(f"Load test complete. {count} Prisma processes were opened before the program crashed or was killed manually.")
+    print(f"Elapsed time: {datetime.timedelta(seconds=(end-start))} seconds")
+
 
 def main():
     run_test()
