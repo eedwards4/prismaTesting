@@ -1,13 +1,74 @@
 from pathlib import Path
 import subprocess
 import datetime
+import argparse
 import time
 import csv
 
-AHK_PATH = r"C:/Program Files/AutoHotkey/v2/AutoHotkey64.exe"
-SCRIPT = "./prisma_test.ahk"
 
-URLS = []
+def main():
+    parser = argparse.ArgumentParser(description='A program for testing secure browsers against large common blocklists')
+    parser.add_argument('-ahk_dir', action='store', dest='autohotkey_path', help="Define a custom AutoHotKey executible path.")
+    parser.add_argument('-ahk_tgt', action='store', dest='autohotkey_script', help="Define a custom AutoHotKey script target path.")
+    parser.add_argument('-d', action='store', dest="target_directory", help="Define a custom directory path for target files.")
+    parser.add_argument('--t', nargs='+', required=True, dest="inputs", help="Mark the beginning of the target files.")
+
+    args = parser.parse_args()
+    list_files = args.inputs
+    total_unblocked = 0
+    total_total = 0
+    all_unblocked = []
+
+    global AHK_SCRIPT
+    global SRC_FILEPATH
+    global AHK_PATH
+
+    AHK_PATH = r"C:/Program Files/AutoHotkey/v2/AutoHotkey64.exe"
+    SRC_FILEPATH = "{}\\lists".format(Path.cwd())
+    AHK_SCRIPT = "./prisma_test.ahk"
+
+    if args.autohotkey_path is not None:
+        AHK_PATH = args.autohotkey_path
+    
+    if args.autohotkey_script is not None:
+        AHK_SCRIPT = args.autohotkey_script
+    
+    if args.target_directory is not None:
+        SRC_FILEPATH = args.target_directory
+
+    print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
+
+    start = time.perf_counter()
+
+    for file in list_files:
+        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file))
+        total_unblocked += num_unblocked
+        total_total += num_total
+        all_unblocked.append(unblocked_list)
+    
+    end = time.perf_counter()
+
+    # Prettyprint
+    print("------------------------------------------------------")
+    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))))
+    print("Total URLs checked: {}".format(total_total))
+    print("Total Undetected URLS: {}".format(total_unblocked))
+    if total_total != 0:
+        percent = (total_unblocked / total_total) * 100
+    else:
+        percent = 0
+    print("{} percent of URLs were undetected.".format(percent))
+
+    file = open("test-results-cumulative.txt", "w")
+    print("Logging all undetected urls to test-results-cumulative.txt")
+    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))), file=file)
+    print("Total URLs checked: {}".format(total_total), file=file)
+    print("Total Undetected URLS: {}".format(total_unblocked), file=file)
+    print("{} percent of URLs were undetected.".format(percent), file=file)
+    print("The following URLs were able to escape detection:", file=file)
+    for site_list in all_unblocked:
+        for site in site_list:
+            print(site, file=file)
 
 
 def urlStripper(line):
@@ -25,7 +86,7 @@ def urlStripper(line):
 # Test programs
 def asAHK(url):
     # Run AHK script on URL
-    subprocess.run([AHK_PATH, SCRIPT, url])
+    subprocess.run([AHK_PATH, AHK_SCRIPT, url])
     
     file = open("{}/AppData/Local/Temp/ahk_output.txt".format(Path.home()))
     content = file.readline().strip()
@@ -100,48 +161,6 @@ def run_test(filepath):
     file.close()
 
     return num_unblocked, num_total, unblocked_list
-
-
-def main():
-    list_files = ["piracy.txt", "drugs.txt"]
-
-    total_unblocked = 0
-    total_total = 0
-    all_unblocked = []
-
-    print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
-    start = time.perf_counter()
-
-    for file in list_files:
-        num_unblocked, num_total, unblocked_list = run_test("{}\\lists\\{}".format(Path.cwd(), file))
-
-        total_unblocked += num_unblocked
-        total_total += num_total
-        all_unblocked.append(unblocked_list)
-    
-    end = time.perf_counter()
-
-    # Prettyprint
-    print("------------------------------------------------------")
-    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))))
-    print("Total URLs checked: {}".format(total_total))
-    print("Total Undetected URLS: {}".format(total_unblocked))
-    if total_total != 0:
-        percent = (total_unblocked / total_total) * 100
-    else:
-        percent = 0
-    print("{} percent of URLs were undetected.".format(percent))
-
-    file = open("test-results-cumulative.txt", "w")
-    print("Logging all undetected urls to test-results-cumulative.txt")
-    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))), file=file)
-    print("Total URLs checked: {}".format(total_total), file=file)
-    print("Total Undetected URLS: {}".format(total_unblocked), file=file)
-    print("{} percent of URLs were undetected.".format(percent), file=file)
-    print("The following URLs were able to escape detection:", file=file)
-    for site_list in all_unblocked:
-        for site in site_list:
-            print(site, file=file)
 
 
 main()
