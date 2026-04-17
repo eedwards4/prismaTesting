@@ -6,8 +6,13 @@ url := A_Args[1]
 
 ; Activate browser
 Sleep(waitTime)
-WinActivate("New Tab - Prisma Browser")
-WinWaitActive("New Tab - Prisma Browser", , 3)
+try{
+    WinActivate("New Tab - Prisma Browser")
+    WinWaitActive("New Tab - Prisma Browser", , 3)
+}
+catch {
+    ("pass") ; Likely a tab failed to close or some other asinine bs, just ignore it
+}
 
 ; New tab
 Send("^t")
@@ -68,7 +73,13 @@ if !ClipWait(2) {
 }
 
 ; Close tab after we're done with it
-Send("^w")
+try {
+    Send("^w")
+}
+catch {
+    ; If it fails, it's probably because the tab a close confirmation dialog. In that case, send an extra "Enter" to confirm closing the tab.
+    Send("{Enter}")
+}
 
 Sleep(1000)
 
