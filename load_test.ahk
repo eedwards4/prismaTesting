@@ -5,8 +5,8 @@ waitTime := 4000
 
 ; Activate browser
 Sleep(waitTime)
-WinActivate("Noisestorm - Crab Rave [Monstercat Release] - YouTube - Prisma Browser")
-WinWaitActive("Noisestorm - Crab Rave [Monstercat Release] - YouTube - Prisma Browser", , 3)
+; WinActivate("Noisestorm - Crab Rave [Monstercat Release] - YouTube - Prisma Browser")
+; WinWaitActive("Noisestorm - Crab Rave [Monstercat Release] - YouTube - Prisma Browser", , 3)
 
 ; New tab
 Send("^t")
