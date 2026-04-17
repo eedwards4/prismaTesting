@@ -5,7 +5,7 @@ import datetime
 import psutil
 import time
 
-AHK_PATH = "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe"
+AHK_PATH = "C:\\Program Files\\AutoHotkey\\v2\\AutoHotkey64.exe"
 AHK_SCRIPT = "./load_test.ahk"
 
 
