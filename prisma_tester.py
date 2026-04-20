@@ -118,7 +118,7 @@ def run_test(filepath):
     print("Running test for file: {}".format(filepath), file=output)
 
     # Logic
-    stoppoint = 20
+    stoppoint = 100
     iterator = 0
     with open(filepath, 'r', encoding='utf8') as file:
         for line in file:
