@@ -6,13 +6,8 @@ url := A_Args[1]
 
 ; Activate browser
 Sleep(waitTime)
-try{
-    WinActivate("New Tab - Prisma Browser")
-    WinWaitActive("New Tab - Prisma Browser", , 3)
-}
-catch {
-    ("pass") ; Likely a tab failed to close or some other asinine bs, just ignore it
-}
+WinActivate("New Tab - Prisma Browser")
+WinWaitActive("New Tab - Prisma Browser", , 3)
 
 ; New tab
 Send("^t")
