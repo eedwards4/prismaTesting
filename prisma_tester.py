@@ -132,6 +132,7 @@ def run_test(filepath):
                         unblocked_list.append(url)
                 
                     num_total += 1
+                iterator += 1
             else:
                 break
     
