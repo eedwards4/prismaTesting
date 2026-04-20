@@ -118,7 +118,7 @@ def run_test(filepath):
     print("Running test for file: {}".format(filepath), file=output)
 
     # Logic
-    stoppoint = 100
+    stoppoint = 1000
     iterator = 0
     with open(filepath, 'r', encoding='utf8') as file:
         for line in file:
@@ -132,7 +132,7 @@ def run_test(filepath):
                         unblocked_list.append(url)
                 
                     num_total += 1
-                iterator += 1
+                    iterator += 1
             else:
                 break
     
