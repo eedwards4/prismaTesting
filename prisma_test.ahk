@@ -55,6 +55,9 @@ if !ClipWait(2) {
         else if InStr(pageText, "Pasting this data from Prisma Browser is prohibited") {
             result := "TRUE"    ; UNAVAILABLE (This is really brittle...)
         }
+        else if InStr(pageText, "This site can't be reached") {
+            result := "TRUE"
+        }
         else if InStr(pageText, "403 Forbidden") {
             result := "TRUE"      ; FORBIDDEN
         }
