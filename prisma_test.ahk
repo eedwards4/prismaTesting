@@ -6,13 +6,8 @@ url := A_Args[1]
 
 ; Activate browser
 Sleep(waitTime)
-try{
-    WinActivate("New Tab - Prisma Browser")
-    WinWaitActive("New Tab - Prisma Browser", , 3)
-}
-catch {
-    ("pass") ; Likely a tab failed to close or some other asinine bs, just ignore it
-}
+WinActivate("New Tab - Prisma Browser")
+WinWaitActive("New Tab - Prisma Browser", , 3)
 
 ; New tab
 Send("^t")
@@ -59,6 +54,9 @@ if !ClipWait(2) {
         }
         else if InStr(pageText, "Pasting this data from Prisma Browser is prohibited") {
             result := "TRUE"    ; UNAVAILABLE (This is really brittle...)
+        }
+        else if InStr(pageText, "This site can't be reached") {
+            result := "TRUE"
         }
         else if InStr(pageText, "403 Forbidden") {
             result := "TRUE"      ; FORBIDDEN
