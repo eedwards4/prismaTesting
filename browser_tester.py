@@ -132,9 +132,17 @@ def asWEBDRVR(url):
         driver.quit()
         return False
     
-    WebDriverWait(driver, 1).until(
-        lambda d: d.execute_script("return document.readyState") == "complete"
-    )
+    try:
+        WebDriverWait(driver, 1).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
+    except Exception as e:
+        if "selenium.common.exceptions.TimeoutException:" in str(e):
+            if VERBOSE: print("Ignored Timeout Exception || {} || {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
+        else:
+            if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
+        driver.quit()
+        return False   
 
     # time.sleep(5)
 
