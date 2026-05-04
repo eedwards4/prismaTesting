@@ -113,7 +113,10 @@ def asAHK(url):
     return False
 
 def asWEBDRVR(url):
-    DRIVER.get(url)
+    try:
+        DRIVER.get(url)
+    except:
+        return False
     
     WebDriverWait(DRIVER, 10).until(
         lambda d: d.execute_script("return document.readyState") == "complete"
