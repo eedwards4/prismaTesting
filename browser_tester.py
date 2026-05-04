@@ -121,9 +121,9 @@ def asWEBDRVR(url):
 
     try:
         driver.get(url)
-    except TimeoutError:
+    except Exception as e:
         driver.execute_script("window.stop();")
-        if VERBOSE: print("WARN: Timed Out || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
+        if VERBOSE: print("WARN: Caught Exception {} || {} || Elapsed: {}".format(e, url, datetime.timedelta(seconds=(time.perf_counter() - start))))
         return False
     
     WebDriverWait(driver, 1).until(
