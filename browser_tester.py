@@ -125,6 +125,8 @@ def asWEBDRVR(url):
         driver.execute_script("window.stop();")
         if ("net::ERR_NAME_NOT_RESOLVED" in str(e)):
             if VERBOSE: print("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
+        elif ("Message: timeout:" in str(e)):
+            if VERBOSE: print("Ignored Renderer Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
         else:
             if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
         driver.quit()
