@@ -127,6 +127,7 @@ def asWEBDRVR(url):
             if VERBOSE: print("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
         else:
             if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
+        driver.quit()
         return False
     
     WebDriverWait(driver, 1).until(
