@@ -123,7 +123,7 @@ def asWEBDRVR(url):
         driver.get(url)
     except Exception as e:
         driver.execute_script("window.stop();")
-        if ("net::ERR_NAME_NOT_RESOLVED" in e):
+        if ("net::ERR_NAME_NOT_RESOLVED" in str(e)):
             if VERBOSE: print("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
         else:
             if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
