@@ -1,7 +1,0 @@
-------------------------------------------------------
-Running test for file: C:\Users\ethan.edwards\Documents\Scripts\py\prismatesting\lists\test.txt
-Test complete, elapsed time 0:00:00.482757
-Total URLs tested: 1
-Undetected URLS: 0
-0.0 percent of URLs were undetected.
-The following URLs escaped detection:

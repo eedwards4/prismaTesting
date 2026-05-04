@@ -1,5 +1,0 @@
-All tests complete, elapsed time 0:00:00.484147
-Total URLs checked: 1
-Total Undetected URLS: 0
-0.0 percent of URLs were undetected.
-The following URLs were able to escape detection:

@@ -11,6 +11,7 @@ import csv
 def main():
     parser = argparse.ArgumentParser(description='A program for testing secure browsers against large common blocklists')
     # Global args
+    parser.add_argument('-v', action='store_true', dest="verbose", help="Verbose mode.")
     parser.add_argument('-d', action='store', dest="target_directory", help="Define a custom directory path for target files.")
     parser.add_argument('--t', nargs='+', required=True, dest="inputs", help="Mark the beginning of the target files.")
     parser.add_argument('-runas', action='store', required=True, dest='runAS', help="Define the target testing program. Options: 'ahk', 'webdriver'")
@@ -29,14 +30,11 @@ def main():
     global AHK_SCRIPT
     global SRC_FILEPATH
     global AHK_PATH
-    global DRIVER
+    global VERBOSE
+    VERBOSE = False
 
     # Global config
     SRC_FILEPATH = "{}\\lists".format(Path.cwd())
-
-    # Selenium config
-    if runAS == "webdriver":
-        DRIVER = webdriver.Chrome()
 
     # AutoHotKey Config
     AHK_PATH = r"C:/Program Files/AutoHotkey/v2/AutoHotkey64.exe"
@@ -50,6 +48,9 @@ def main():
     
     if args.target_directory is not None:
         SRC_FILEPATH = args.target_directory
+    
+    if args.verbose:
+        VERBOSE = True
 
     print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
 
@@ -113,8 +114,12 @@ def asAHK(url):
     return False
 
 def asWEBDRVR(url):
+    driver = webdriver.Chrome()
+    start = 0
+    if VERBOSE: start = time.perf_counter()
+
     try:
-        DRIVER.get(url)
+        driver.get(url)
     except:
         return False
     
@@ -124,10 +129,15 @@ def asWEBDRVR(url):
 
     time.sleep(5)
 
-    print(DRIVER.title)
-    if not "DefensX" in DRIVER.title:
-        return True
+    if VERBOSE: print("{} || {} || ".format(driver.title, url), end="")
 
+    if not "DefensX" in driver.title:
+        if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
+        driver.quit()
+        return True
+    
+    if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
+    driver.quit()
     return False
 
 def asTEST(url):
