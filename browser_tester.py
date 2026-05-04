@@ -118,7 +118,7 @@ def asWEBDRVR(url):
     except:
         return False
     
-    WebDriverWait(DRIVER, 10).until(
+    WebDriverWait(DRIVER, 1).until(
         lambda d: d.execute_script("return document.readyState") == "complete"
     )
 
@@ -132,7 +132,7 @@ def asTEST(url):
     return True
 
 
-def run_test(filepath, runAS, stoppoint=1000):
+def run_test(filepath, runAS, stoppoint=100):
     num_unblocked = 0
     num_total = 0
     unblocked_list = []
