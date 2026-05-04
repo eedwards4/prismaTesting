@@ -140,7 +140,14 @@ def asWEBDRVR(url):
 
     if VERBOSE: print("{} || {} || ".format(driver.title, url), end="")
 
-    if not "DefensX" in driver.title:
+    whitelist = ("defensx", "403", "domain")
+    target = True
+
+    for i in whitelist:
+        if i in str(driver.title).lower:
+            target = False
+
+    if target:
         if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
         driver.quit()
         return True
