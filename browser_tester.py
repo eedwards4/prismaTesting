@@ -118,9 +118,11 @@ def asWEBDRVR(url):
     except:
         return False
     
-    WebDriverWait(DRIVER, 1).until(
-        lambda d: d.execute_script("return document.readyState") == "complete"
-    )
+    # WebDriverWait(DRIVER, 1).until(
+    #     lambda d: d.execute_script("return document.readyState") == "complete"
+    # )
+
+    time.sleep(5)
 
     print(DRIVER.title)
     if not "DefensX" in DRIVER.title:
