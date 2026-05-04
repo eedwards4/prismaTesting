@@ -115,7 +115,7 @@ def asAHK(url):
 
 def asWEBDRVR(url):
     driver = webdriver.Chrome()
-    driver.set_page_load_timeout(15)
+    driver.set_page_load_timeout(30)
     start = 0
     if VERBOSE: start = time.perf_counter()
 
