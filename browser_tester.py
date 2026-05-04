@@ -140,11 +140,11 @@ def asWEBDRVR(url):
 
     if VERBOSE: print("{} || {} || ".format(driver.title, url), end="")
 
-    whitelist = ("defensx", "403", "domain")
+    whitelist = ("DefensX", "403", "Domain", "domain")
     target = True
 
     for i in whitelist:
-        if i in str(driver.title).lower:
+        if i in driver.title:
             target = False
 
     if target:
