@@ -12,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description='A program for testing secure browsers against large common blocklists')
     # Global args
     parser.add_argument('-v', action='store_true', dest="verbose", help="Verbose mode.")
+    parser.add_argument('-n', action='store', dest="num_urls", help="The number of URLs to check per list. Default 100.")
     parser.add_argument('-d', action='store', dest="target_directory", help="Define a custom directory path for target files.")
     parser.add_argument('--t', nargs='+', required=True, dest="inputs", help="Mark the beginning of the target files.")
     parser.add_argument('-runas', action='store', required=True, dest='runAS', help="Define the target testing program. Options: 'ahk', 'webdriver'")
@@ -23,6 +24,7 @@ def main():
     args = parser.parse_args()
     list_files = args.inputs
     runAS = args.runAS
+    stoppoint = 100
     total_unblocked = 0
     total_total = 0
     all_unblocked = []
@@ -49,6 +51,9 @@ def main():
     if args.target_directory is not None:
         SRC_FILEPATH = args.target_directory
     
+    if args.num_urls is not None:
+        stoppoint = args.num_urls
+    
     if args.verbose:
         VERBOSE = True
 
@@ -57,7 +62,7 @@ def main():
     start = time.perf_counter()
 
     for file in list_files:
-        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file), runAS)
+        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file, stoppoint), runAS)
         total_unblocked += num_unblocked
         total_total += num_total
         all_unblocked.append(unblocked_list)
