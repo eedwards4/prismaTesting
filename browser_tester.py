@@ -123,11 +123,11 @@ def asWEBDRVR(url):
     except:
         return False
     
-    # WebDriverWait(DRIVER, 1).until(
-    #     lambda d: d.execute_script("return document.readyState") == "complete"
-    # )
+    WebDriverWait(driver, 1).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
+    )
 
-    time.sleep(5)
+    # time.sleep(5)
 
     if VERBOSE: print("{} || {} || ".format(driver.title, url), end="")
 
