@@ -115,12 +115,15 @@ def asAHK(url):
 
 def asWEBDRVR(url):
     driver = webdriver.Chrome()
+    driver.set_page_load_timeout(15)
     start = 0
     if VERBOSE: start = time.perf_counter()
 
     try:
         driver.get(url)
-    except:
+    except TimeoutError:
+        driver.execute_script("window.stop();")
+        if VERBOSE: print("WARN: Timed Out || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
         return False
     
     WebDriverWait(driver, 1).until(
