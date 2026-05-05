@@ -60,6 +60,7 @@ def main():
     if VERBOSE: 
         print("Verbose mode enabled. Current configuration is as follows: ")
         print("Stoppoint: {} | Running As: {} \nTarget Dir: {} | AutoHotKey: {} \nAHK Script: {}".format(stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT))
+        print("------------------------------------------------------")
     
     print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
 
@@ -177,7 +178,7 @@ def asTEST(url):
     return True
 
 
-def run_test(filepath, runAS, stoppoint=100):
+def run_test(filepath, runAS, stoppoint):
     num_unblocked = 0
     num_total = 0
     unblocked_list = []
