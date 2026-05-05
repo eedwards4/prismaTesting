@@ -52,7 +52,7 @@ def main():
         SRC_FILEPATH = args.target_directory
     
     if args.num_urls is not None:
-        stoppoint = args.num_urls
+        stoppoint = int(args.num_urls)
     
     if args.verbose:
         VERBOSE = True
