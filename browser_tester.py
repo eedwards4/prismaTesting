@@ -59,7 +59,7 @@ def main():
         
     if VERBOSE: 
         print("Verbose mode enabled. Current configuration is as follows: ")
-        print("Stoppoint: {} | Running As: {} \nTarget Dir: {} | AutoHotKey: {} \nAHK Script: {}".format(stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT))
+        print(">Stoppoint: {} \n>Running As: {} \n>Target Dir: {} \n>AutoHotKey: {} \n>AHK Script: {}".format(stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT))
         print("------------------------------------------------------")
     
     print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
