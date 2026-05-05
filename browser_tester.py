@@ -67,7 +67,7 @@ def main():
     start = time.perf_counter()
 
     for file in list_files:
-        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file, stoppoint), runAS)
+        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file), runAS, stoppoint)
         total_unblocked += num_unblocked
         total_total += num_total
         all_unblocked.append(unblocked_list)
