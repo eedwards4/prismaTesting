@@ -24,7 +24,7 @@ def main():
     args = parser.parse_args()
     list_files = args.inputs
     runAS = args.runAS
-    stoppoint = 100
+    stoppoint = 10
     total_unblocked = 0
     total_total = 0
     all_unblocked = []
@@ -56,7 +56,11 @@ def main():
     
     if args.verbose:
         VERBOSE = True
-
+        
+    if VERBOSE: 
+        print("Verbose mode enabled. Current configuration is as follows: ")
+        print("Stoppoint: {} | Running As: {} \nTarget Dir: {} | AutoHotKey: {} \nAHK Script: {}".format(stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT))
+    
     print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
 
     start = time.perf_counter()
