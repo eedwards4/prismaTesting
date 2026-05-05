@@ -197,7 +197,7 @@ def run_test(filepath, runAS, stoppoint):
     iterator = 0
     with open(filepath, 'r', encoding='utf8') as file:
         for line in file:
-            if iterator <= stoppoint:
+            if iterator < stoppoint:
                 # Strip URL from line
                 url = urlStripper(line)
 
