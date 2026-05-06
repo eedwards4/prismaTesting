@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium import webdriver
 from pathlib import Path
+import output_handler
 import subprocess
 import datetime
 import argparse
@@ -11,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description='A program for testing secure browsers against large common blocklists')
     # Global args
     parser.add_argument('-v', action='store_true', dest="verbose", help="Verbose mode.")
+    parser.add_argument('-l', action='store_true', dest="log", help="Logging mode.")
     parser.add_argument('-n', action='store', dest="num_urls", help="The number of URLs to check per list. Default 100.")
     parser.add_argument('-d', action='store', dest="target_directory", help="Define a custom directory path for target files.")
     parser.add_argument('--t', nargs='+', required=True, dest="inputs", help="Mark the beginning of the target files.")
@@ -32,41 +34,37 @@ def main():
     global SRC_FILEPATH
     global AHK_PATH
     global VERBOSE
-    VERBOSE = False
+    global LOG
 
     # Global config
     SRC_FILEPATH = "{}\\lists".format(Path.cwd())
+    VERBOSE = False
+    LOG = False
 
     # AutoHotKey Config
     AHK_PATH = r"C:/Program Files/AutoHotkey/v2/AutoHotkey64.exe"
     AHK_SCRIPT = "./prisma_test.ahk"
 
-    if args.autohotkey_path is not None:
-        AHK_PATH = args.autohotkey_path
+    if args.autohotkey_path is not None: AHK_PATH = args.autohotkey_path
     
-    if args.autohotkey_script is not None:
-        AHK_SCRIPT = args.autohotkey_script
+    if args.autohotkey_script is not None: AHK_SCRIPT = args.autohotkey_script
     
-    if args.target_directory is not None:
-        SRC_FILEPATH = args.target_directory
+    if args.target_directory is not None: SRC_FILEPATH = args.target_directory
     
-    if args.num_urls is not None:
-        stoppoint = int(args.num_urls)
+    if args.num_urls is not None: stoppoint = int(args.num_urls)
     
-    if args.verbose:
-        VERBOSE = True
-        
-    if VERBOSE: 
-        print("Verbose mode enabled. Current configuration is as follows: ")
-        print(">Stoppoint: {} \n>Running As: {} \n>Target Dir: {} \n>AutoHotKey: {} \n>AHK Script: {}".format(stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT))
-        print("------------------------------------------------------")
+    if args.verbose: VERBOSE = True
+    
+    if args.log: LOG = True
+
+    output = output_handler.OutputHandler(Path.cwd(), args.verbose, args.log, stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT)
     
     print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
 
     start = time.perf_counter()
 
     for file in list_files:
-        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file), runAS, stoppoint)
+        num_unblocked, num_total, unblocked_list = run_test("{}\\{}".format(SRC_FILEPATH, file), runAS, stoppoint, output)
         total_unblocked += num_unblocked
         total_total += num_total
         all_unblocked.append(unblocked_list)
@@ -74,26 +72,7 @@ def main():
     end = time.perf_counter()
 
     # Prettyprint
-    print("------------------------------------------------------")
-    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))))
-    print("Total URLs checked: {}".format(total_total))
-    print("Total Undetected URLS: {}".format(total_unblocked))
-    if total_total != 0:
-        percent = (total_unblocked / total_total) * 100
-    else:
-        percent = 0
-    print("{} percent of URLs were undetected.".format(percent))
-
-    file = open("test-results-cumulative.txt", "w")
-    print("Logging all undetected urls to test-results-cumulative.txt")
-    print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))), file=file)
-    print("Total URLs checked: {}".format(total_total), file=file)
-    print("Total Undetected URLS: {}".format(total_unblocked), file=file)
-    print("{} percent of URLs were undetected.".format(percent), file=file)
-    print("The following URLs were able to escape detection:", file=file)
-    for site_list in all_unblocked:
-        for site in site_list:
-            print(site, file=file)
+    output.finalOutput(total_unblocked, total_total, all_unblocked, start, end)
 
 
 def urlStripper(line):
@@ -122,22 +101,16 @@ def asAHK(url):
     
     return False
 
-def asWEBDRVR(url):
+def asWEBDRVR(url, output):
     driver = webdriver.Chrome()
     driver.set_page_load_timeout(30)
-    start = 0
-    if VERBOSE: start = time.perf_counter()
+    start = time.perf_counter()
 
     try:
         driver.get(url)
     except Exception as e:
         driver.execute_script("window.stop();")
-        if ("net::ERR_NAME_NOT_RESOLVED" in str(e)):
-            if VERBOSE: print("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
-        elif ("Message: timeout:" in str(e)):
-            if VERBOSE: print("Ignored Renderer Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
-        else:
-            if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
+        output.logException(str(e), start, time.perf_counter(), url)
         driver.quit()
         return False
     
@@ -146,16 +119,13 @@ def asWEBDRVR(url):
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
     except Exception as e:
-        if "selenium.common.exceptions.TimeoutException:" in str(e):
-            if VERBOSE: print("Ignored Timeout Exception || {} || {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
-        else:
-            if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
+        output.logException(str(e), start, time.perf_counter(), url)
         driver.quit()
         return False   
 
     # time.sleep(5)
 
-    if VERBOSE: print("{} || {} || ".format(driver.title, url), end="")
+    output.write("{} || {} || ".format(driver.title, url), end="")
 
     whitelist = ("DefensX", "403", "Domain", "domain")
     target = True
@@ -165,11 +135,11 @@ def asWEBDRVR(url):
             target = False
 
     if target:
-        if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
+        output.write("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
         driver.quit()
         return True
     
-    if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
+    output.write("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
     driver.quit()
     return False
 
@@ -177,20 +147,15 @@ def asTEST(url):
     return True
 
 
-def run_test(filepath, runAS, stoppoint):
+def run_test(filepath, runAS, stoppoint, output):
     num_unblocked = 0
     num_total = 0
     unblocked_list = []
 
+    # Logging
+    output.testInit(filepath)
+
     start = time.perf_counter()
-
-    output = open("test-results-{}".format(filepath.split('\\')[-1]), "w")
-
-    # Print statements for logging
-    print("------------------------------------------------------")
-    print("Running test for file: {}".format(filepath))
-    print("------------------------------------------------------", file=output)
-    print("Running test for file: {}".format(filepath), file=output)
 
     # Logic
     iterator = 0
@@ -208,7 +173,7 @@ def run_test(filepath, runAS, stoppoint):
                                 unblocked_list.append(url)
                         
                         case "webdriver":
-                            if asWEBDRVR(url):
+                            if asWEBDRVR(url, output):
                                 num_unblocked += 1
                                 unblocked_list.append(url)
                         
@@ -225,27 +190,7 @@ def run_test(filepath, runAS, stoppoint):
     end = time.perf_counter()
     
     # More logging
-    print("Test complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))))
-    print("Total URLs tested: {}".format(num_total))
-    print("Undetected URLS: {}".format(num_unblocked))
-    if num_total != 0:
-        percent = (num_unblocked / num_total) * 100
-    else:
-        percent = 0
-    print("{} percent of URLs were undetected.".format(percent))
-    print("See test-results-{} for details on undetected sites".format(filepath.split('\\')[-1]))
-
-    # Log to file
-    print("Test complete, elapsed time {}".format(datetime.timedelta(seconds=(end - start))), file=output)
-    print("Total URLs tested: {}".format(num_total), file=output)
-    print("Undetected URLS: {}".format(num_unblocked), file=output)
-    print("{} percent of URLs were undetected.".format(percent), file=output)
-    print("The following URLs escaped detection:", file=output)
-    for site in unblocked_list:
-        print(site, file=output)
-    
-    output.close()
-    file.close()
+    output.testOutput(num_unblocked, num_total, unblocked_list, start, end, filepath)
 
     return num_unblocked, num_total, unblocked_list
 
