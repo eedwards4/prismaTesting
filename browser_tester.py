@@ -5,7 +5,6 @@ import subprocess
 import datetime
 import argparse
 import time
-import csv
 
 
 def main():
