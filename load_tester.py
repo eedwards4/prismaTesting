@@ -36,7 +36,7 @@ def run_test():
     baseCount = get_num_prisma_processes() # The number of Prisma processes running before the test starts
     count = 0 # The number of Prisma processes that have been opened by the test
     print(f"{baseCount} Prisma processes were already running before the test started.")
-    while is_process_running("PrismaAccessBrowser.exe"):
+    while is_process_running("PrismaAccessBrowser.exe") and psutil.virtual_memory().percent < 95:
         subprocess.run([AHK_PATH, AHK_SCRIPT])
         count = get_num_prisma_processes() - baseCount
         print(f"{count} Prisma processes opened so far...") # Redundancy in case prisma doesn't crash before the system runs out of memory and the test is killed manually
