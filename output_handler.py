@@ -1,4 +1,5 @@
 import datetime
+import threading
 
 
 class OutputHandler:
@@ -7,6 +8,8 @@ class OutputHandler:
         self.verbose = verbose
         self.log = log
         self.logfilename = "log-{}.txt".format(datetime.datetime.now()).replace(" ", "_").replace(":", "-").replace(".", "-")
+        self.vbsLock = threading.Lock()
+        self.logLock = threading.Lock()
 
         if self.verbose:
             print("Verbose mode enabled. Current configuration is as follows: ")
@@ -21,11 +24,13 @@ class OutputHandler:
 
     def write(self, message, end="\n"):
         if self.verbose:
-            print(message, end=end)
+            with self.vbsLock:
+                print(message, end=end)
 
         if self.log:
-            self.logfile.write(message + "\n")
-            self.logfile.flush()
+            with self.logLock:
+                self.logfile.write(message + "\n")
+                self.logfile.flush()
     
 
     def logException(self, exception, start, end, url):
