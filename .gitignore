@@ -2,3 +2,5 @@
 /lists/*
 /results_prisma
 /results_prisma/*
+/__pycache__
+*.pyc

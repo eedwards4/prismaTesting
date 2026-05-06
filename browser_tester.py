@@ -12,7 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description='A program for testing secure browsers against large common blocklists')
     # Global args
     parser.add_argument('-v', action='store_true', dest="verbose", help="Verbose mode.")
-    parser.add_argument('-l', action='log_true', dest="log", help="Logging mode.")
+    parser.add_argument('-l', action='store_true', dest="log", help="Logging mode.")
     parser.add_argument('-n', action='store', dest="num_urls", help="The number of URLs to check per list. Default 100.")
     parser.add_argument('-d', action='store', dest="target_directory", help="Define a custom directory path for target files.")
     parser.add_argument('--t', nargs='+', required=True, dest="inputs", help="Mark the beginning of the target files.")
@@ -45,25 +45,19 @@ def main():
     AHK_PATH = r"C:/Program Files/AutoHotkey/v2/AutoHotkey64.exe"
     AHK_SCRIPT = "./prisma_test.ahk"
 
-    if args.autohotkey_path is not None:
-        AHK_PATH = args.autohotkey_path
+    if args.autohotkey_path is not None: AHK_PATH = args.autohotkey_path
     
-    if args.autohotkey_script is not None:
-        AHK_SCRIPT = args.autohotkey_script
+    if args.autohotkey_script is not None: AHK_SCRIPT = args.autohotkey_script
     
-    if args.target_directory is not None:
-        SRC_FILEPATH = args.target_directory
+    if args.target_directory is not None: SRC_FILEPATH = args.target_directory
     
-    if args.num_urls is not None:
-        stoppoint = int(args.num_urls)
+    if args.num_urls is not None: stoppoint = int(args.num_urls)
     
-    if args.verbose:
-        VERBOSE = True
+    if args.verbose: VERBOSE = True
     
-    if args.log:
-        LOG = True
+    if args.log: LOG = True
 
-    output = output_handler(Path.cwd(), args.verbose, args.log, stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT)
+    output = output_handler.OutputHandler(Path.cwd(), args.verbose, args.log, stoppoint, runAS, SRC_FILEPATH, AHK_PATH, AHK_SCRIPT)
     
     print("Begin testing run, time is currently {}".format(datetime.datetime.now()))
 
@@ -107,22 +101,16 @@ def asAHK(url):
     
     return False
 
-def asWEBDRVR(url):
+def asWEBDRVR(url, output):
     driver = webdriver.Chrome()
     driver.set_page_load_timeout(30)
-    start = 0
-    if VERBOSE: start = time.perf_counter()
+    start = time.perf_counter()
 
     try:
         driver.get(url)
     except Exception as e:
         driver.execute_script("window.stop();")
-        if ("net::ERR_NAME_NOT_RESOLVED" in str(e)):
-            if VERBOSE: print("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
-        elif ("Message: timeout:" in str(e)):
-            if VERBOSE: print("Ignored Renderer Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
-        else:
-            if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
+        output.logException(str(e), start, time.perf_counter(), url)
         driver.quit()
         return False
     
@@ -131,16 +119,13 @@ def asWEBDRVR(url):
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
     except Exception as e:
-        if "selenium.common.exceptions.TimeoutException:" in str(e):
-            if VERBOSE: print("Ignored Timeout Exception || {} || {}".format(url, datetime.timedelta(seconds=(time.perf_counter() - start))))
-        else:
-            if VERBOSE: print("{} || WARN: Encountered the following error: \n {}".format(url, e))
+        output.logException(str(e), start, time.perf_counter(), url)
         driver.quit()
         return False   
 
     # time.sleep(5)
 
-    if VERBOSE: print("{} || {} || ".format(driver.title, url), end="")
+    output.write("{} || {} || ".format(driver.title, url), end="")
 
     whitelist = ("DefensX", "403", "Domain", "domain")
     target = True
@@ -150,11 +135,11 @@ def asWEBDRVR(url):
             target = False
 
     if target:
-        if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
+        output.write("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
         driver.quit()
         return True
     
-    if VERBOSE: print("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
+    output.write("Elapsed: {}".format(datetime.timedelta(seconds=(time.perf_counter() - start))))
     driver.quit()
     return False
 
@@ -188,7 +173,7 @@ def run_test(filepath, runAS, stoppoint, output):
                                 unblocked_list.append(url)
                         
                         case "webdriver":
-                            if asWEBDRVR(url):
+                            if asWEBDRVR(url, output):
                                 num_unblocked += 1
                                 unblocked_list.append(url)
                         

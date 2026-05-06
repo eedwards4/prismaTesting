@@ -4,9 +4,9 @@ import datetime
 class OutputHandler:
     def __init__(self, cwd, verbose, log, stoppoint, runAS, srcFilepath, ahkPath, ahkScript):
         self.cwd = cwd
-        self.vebose = verbose
+        self.verbose = verbose
         self.log = log
-        self.logfilename = "log-{}.txt".format(datetime.datetime.now())
+        self.logfilename = "log-{}.txt".format(datetime.datetime.now()).replace(" ", "_").replace(":", "-").replace(".", "-")
 
         if self.verbose:
             print("Verbose mode enabled. Current configuration is as follows: ")
@@ -19,7 +19,28 @@ class OutputHandler:
             print("------------------------------------------------------")
 
 
-    def testInit(filepath):
+    def write(self, message, end="\n"):
+        if self.verbose:
+            print(message, end=end)
+
+        if self.log:
+            self.logfile.write(message + "\n")
+            self.logfile.flush()
+    
+
+    def logException(self, exception, start, end, url):
+        if self.verbose or self.log:
+            if "net:ERR_NAME_NOT_RESOLVED" in exception:
+                self.write("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
+            elif "Message: timeout:" in exception:
+                self.write("Ignored Renderer Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
+            elif "selenium.common.exceptions.TimeoutException:" in exception:
+                self.write("Ignored Timeout Exception || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
+            else:
+                self.write("{} || WARN: Encountered the following error: \n {}".format(url, exception))
+
+
+    def testInit(self, filepath):
         output = open("test-results-{}".format(filepath.split('\\')[-1]), "w")
         print("------------------------------------------------------")
         print("Running test for file: {}".format(filepath))
@@ -28,7 +49,7 @@ class OutputHandler:
         output.close()
 
 
-    def testOutput(unblocked, total, ubList, startTime, endTime, filepath):
+    def testOutput(self, unblocked, total, ubList, startTime, endTime, filepath):
         output = open("test-results-{}".format(filepath.split('\\')[-1]), "w")
 
         print("Test complete, elapsed time {}".format(datetime.timedelta(seconds=(endTime - startTime))))
@@ -53,7 +74,7 @@ class OutputHandler:
         output.close()
 
 
-    def finalOutput(unblocked, total, ubList, startTime, endTime):
+    def finalOutput(self, unblocked, total, ubList, startTime, endTime):
         print("------------------------------------------------------")
         print("All tests complete, elapsed time {}".format(datetime.timedelta(seconds=(endTime - startTime))))
         print("Total URLs checked: {}".format(total))
