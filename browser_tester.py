@@ -105,7 +105,8 @@ def asAHK(url):
 def asWEBDRVR(url, output):
     # Load extension (if extension)
     options = Options()
-    options.add_argument(r"--user-data-dir=C:\\Users\\fts\\AppData\\Local\\Google\\Chrome\\User Data")
+    options.add_argument(r"--user-data-dir=C:\\Users\\fts\\Documents\\Code\\res\\User Data")
+    options.add_argument("--profile-directory=Default")
     options.add_argument("--remote-debugging-port=9222")
     
     driver = webdriver.Chrome(options=options)
