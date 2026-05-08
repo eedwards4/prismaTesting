@@ -120,7 +120,7 @@ def asWEBDRVR(url, output):
 
     output.write("{} || {} || ".format(driver.title, url), end="")
 
-    whitelist = ("DefensX", "403", "Domain", "domain")
+    whitelist = ("DefensX", "403", "Domain", "domain", "Not found.")
     target = True
 
     for i in whitelist:
