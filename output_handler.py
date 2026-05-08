@@ -39,8 +39,10 @@ class OutputHandler:
 
     def logException(self, exception, start, end, url):
         if self.verbose or self.log:
-            if "net:ERR_NAME_NOT_RESOLVED" in exception:
+            if "net::ERR_NAME_NOT_RESOLVED" in exception:
                 self.write("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
+            if "net::ERR_CONNECTION_TIMED_OUT" in exception:
+                self.write("Ignored Network Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
             elif "Message: timeout:" in exception:
                 self.write("Ignored Renderer Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
             elif "selenium.common.exceptions.TimeoutException:" in exception:
