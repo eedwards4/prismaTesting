@@ -43,6 +43,8 @@ class OutputHandler:
                 self.write("Ignored Name Resolution Error || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
             elif "net::ERR_CONNECTION_TIMED_OUT" in exception:
                 self.write("Ignored Network Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
+            elif "net::ERR_SSL_UNRECOGNIZED_NAME_ALERT" in exception:
+                self.write("Ignored Unrecognized Name Alert || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
             elif "Message: timeout:" in exception:
                 self.write("Ignored Renderer Timeout || {} || Elapsed: {}".format(url, datetime.timedelta(seconds=(end - start))))
             elif "selenium.common.exceptions.TimeoutException:" in exception:
