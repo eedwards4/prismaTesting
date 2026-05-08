@@ -1,0 +1,13 @@
+------------------------------------------------------
+Running test for file: C:\users\fts\documents\code\prismatesting\lists\vaping.txt
+Test complete, elapsed time 0:11:25.954009
+Total URLs tested: 108
+Undetected URLS: 6
+5.555555555555555 percent of URLs were undetected.
+The following URLs escaped detection:
+https://mail.thcvapesoil.com
+https://slickvapes.com
+https://thcvapesoil.com
+https://vaping.org
+https://www.slickvapes.com
+https://www.thcvapesoil.com
