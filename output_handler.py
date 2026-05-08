@@ -29,7 +29,11 @@ class OutputHandler:
 
         if self.log:
             with self.logLock:
-                self.logfile.write(message + "\n")
+                try:
+                    self.logfile.write(message + "\n")
+                except Exception as e:
+                    print("WARN: Failed to write to logfile. Likely bad characters in message. Exception: {}\n".format(e))
+                    self.logfile.write("WARN: Failed to write to logfile. Likely bad characters in message. Exception: {}\n".format(e))
                 self.logfile.flush()
     
 
