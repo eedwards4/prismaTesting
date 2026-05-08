@@ -110,7 +110,7 @@ def asWEBDRVR(url, output):
         return False
     
     try:
-        WebDriverWait(driver, 1).until(
+        WebDriverWait(driver, 5).until(
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
     except Exception as e:
