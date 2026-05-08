@@ -4,7 +4,7 @@ import time
 
 def main():
     options = Options()
-    options.add_argument(r"--user-data-dir=C:\\Users\\ethan.edwards\\AppData\\Local\\Google\\Chrome\\User Data")
+    options.add_argument(r"--user-data-dir=C:\\Users\\fts\\AppData\\Local\\Google\\Chrome\\User Data")
     # options.add_argument('--headless') # TODO: TEST THIS, MIGHT BE ABLE TO SPEED TESTING UP SIGNIFICANTLY
     # options.add_argument('--disable-features=DisableLoadExtensionCommandLineSwitch')
     # options.add_argument('--load-extension=\\Users\\ethan.edwards\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\kdgfdpfnfmmedmkakcfckhblalhincph\\4.3.187_0')
@@ -12,7 +12,7 @@ def main():
     driver = webdriver.Chrome(options=options)
 
     try:
-        driver.get("chrome-extension://kdgfdpfnfmmedmkakcfckhblalhincph/index.html#/dashboard")
+        driver.get("chrome-extension://igcdehhadkimeknpcllehcmdniepaamp/index.html#/dashboard")
         time.sleep(50)
         print("Extension loaded successfully.")
     except:
