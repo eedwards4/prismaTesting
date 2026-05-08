@@ -104,10 +104,8 @@ def asAHK(url):
 
 def asWEBDRVR(url, output):
     # Load extension (if extension)
-    options = Options()
-    options.add_argument('--load-extension=C:\\Users\\fts\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\igcdehhadkimeknpcllehcmdniepaamp\\4.3.191_0')
-
-    driver = webdriver.Chrome(options=options)
+    
+    driver = webdriver.Chrome()
     driver.set_page_load_timeout(30)
     start = time.perf_counter()
 
