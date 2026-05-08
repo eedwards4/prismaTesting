@@ -107,7 +107,7 @@ def asWEBDRVR(url, output):
     options = Options()
     options.add_argument(r"--user-data-dir=C:\\Users\\fts\\AppData\\Local\\Google\\Chrome\\User Data")
     
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=options)
     driver.set_page_load_timeout(30)
     start = time.perf_counter()
 
