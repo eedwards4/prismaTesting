@@ -1,3 +1,5 @@
+------------------------------------------------------
+Running test for file: C:\users\fts\documents\code\prismatesting\lists\phishing.txt
 Test complete, elapsed time 4:32:16.603866
 Total URLs tested: 5000
 Undetected URLS: 1181

@@ -9,6 +9,7 @@ def main():
         total_unblocked = 0
         for filepath in Path(input_dir).glob("*.txt"):
             with open(filepath, "r") as file:
+                print("Processing file: {}".format(filepath))
                 lines = file.readlines()
                 total_urls += int(lines[3].split(" ")[3])
                 total_unblocked += int(lines[4].split(" ")[2])

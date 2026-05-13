@@ -1,3 +1,5 @@
+------------------------------------------------------
+Running test for file: C:\users\fts\documents\code\prismatesting\lists\tracking.txt
 Test complete, elapsed time 4:10:32.828206
 Total URLs tested: 5000
 Undetected URLS: 2513
