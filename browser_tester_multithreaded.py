@@ -104,7 +104,10 @@ def asWEBDRVR(url, output):
     try:
         driver.get(url)
     except Exception as e:
-        driver.execute_script("window.stop();")
+        try:
+            driver.execute_script("window.stop();")
+        except:
+            pass
         output.logException(str(e), start, time.perf_counter(), url)
         driver.quit()
         return False
