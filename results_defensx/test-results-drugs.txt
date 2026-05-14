@@ -1,4 +1,3 @@
-
 ------------------------------------------------------
 Running test for file: C:\users\fts\documents\code\prismatesting\lists\drugs.txt
 Test complete, elapsed time 5:19:21.522171
