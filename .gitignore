@@ -2,5 +2,7 @@
 /lists/*
 /results_prisma
 /results_prisma/*
+/results_defensx
+/results_defensx/*
 /__pycache__
 *.pyc
