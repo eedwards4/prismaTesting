@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 from concurrent.futures import ThreadPoolExecutor
 from selenium import webdriver
 from pathlib import Path
@@ -97,7 +98,9 @@ def asAHK(url):
     return False
 
 def asWEBDRVR(url, output):
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(options=options)
     driver.set_page_load_timeout(30)
     start = time.perf_counter()
 
